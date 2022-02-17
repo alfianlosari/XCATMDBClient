@@ -8,15 +8,25 @@
 
 import Foundation
 
-/// A protocol to retrieve and search movies
+/// A protocol to Retrieve and Search Movies
 public protocol MovieService {
     
     /// Fetch list of movies from an endpoint
-    /// - Parameter endpoint: instance of ``MovieListEndpoint``
+    /// - Parameter endpoint: ``MovieListEndpoint``
     /// - Returns: Array of ``Movie``
     func fetchMovies(from endpoint: MovieListEndpoint) async throws -> [Movie]
+
+    
+    /// Fetch a single movie given an id
+    /// - Parameter id: Integer value of a movie from TMDB API
+    /// - Returns: instance ``Movie``
     func fetchMovie(id: Int) async throws -> Movie
+    
+    /// Search list of movies given using the query keywords
+    /// - Parameter query: Query string
+    /// - Returns: Array of ``Movie``
     func searchMovie(query: String) async throws -> [Movie]
+
 }
 
 public enum MovieListEndpoint: String, CaseIterable, Identifiable {
@@ -28,7 +38,7 @@ public enum MovieListEndpoint: String, CaseIterable, Identifiable {
     case topRated = "top_rated"
     case popular
     
-    var description: String {
+    public var description: String {
         switch self {
             case .nowPlaying: return "Now Playing"
             case .upcoming: return "Upcoming"
@@ -46,7 +56,7 @@ public enum MovieError: Error, CustomNSError {
     case noData
     case serializationError
     
-    var localizedDescription: String {
+    public var localizedDescription: String {
         switch self {
         case .apiError: return "Failed to fetch data"
         case .invalidEndpoint: return "Invalid endpoint"

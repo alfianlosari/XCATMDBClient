@@ -13,18 +13,35 @@ struct MovieResponse: Decodable {
     let results: [Movie]
 }
 
+
+/// Representation of a Movie
+///
+/// The model provides the metadata for a movie such as: ``title``,  ``overview``,  ``cast``.
+///
+/// Example of showing movie title and overview using SwiftUI
+/// ```swift
+/// ForEach(movies) { movie in
+///     VStack {
+///         movie.title
+///         movie.overview
+///     }
+/// }
+/// ```
 public struct Movie: Decodable, Identifiable, Hashable {
-    
-    /// Unique id of the movie
+
+    /// Unique Id of the movie
     public let id: Int
+    
     /// Title of the movie (e.g The Godfather)
     public let title: String
     let backdropPath: String?
     let posterPath: String?
-    /// Short summary of the story
+    
+    /// A short summary of the story
     public let overview: String
     let voteAverage: Double
     let voteCount: Int
+    
     let runtime: Int?
     let releaseDate: String?
     
@@ -45,10 +62,12 @@ public struct Movie: Decodable, Identifiable, Hashable {
         return formatter
     }()
     
+    /// Image backdrop URL of the movie
     var backdropURL: URL {
         return URL(string: "https://image.tmdb.org/t/p/w500\(backdropPath ?? "")")!
     }
     
+    /// Image poster URL of the movie
     var posterURL: URL {
         return URL(string: "https://image.tmdb.org/t/p/w500\(posterPath ?? "")")!
     }
@@ -57,7 +76,8 @@ public struct Movie: Decodable, Identifiable, Hashable {
         genres?.first?.name ?? "n/a"
     }
     
-    var ratingText: String {
+    /// Star rating text of the movie
+    public var ratingText: String {
         let rating = Int(voteAverage)
         let ratingText = (0..<rating).reduce("") { (acc, _) -> String in
             return acc + "★"
@@ -72,21 +92,24 @@ public struct Movie: Decodable, Identifiable, Hashable {
         return "\(ratingText.count)/10"
     }
     
-    var yearText: String {
+    /// Release year of the movie
+    public var yearText: String {
         guard let releaseDate = self.releaseDate, let date = Utils.dateFormatter.date(from: releaseDate) else {
             return "n/a"
         }
         return Movie.yearFormatter.string(from: date)
     }
     
+    /// Duration of the movie
     var durationText: String {
         guard let runtime = self.runtime, runtime > 0 else {
             return "n/a"
         }
-        return Movie.durationFormatter.string(from: TimeInterval(runtime) * 60) ?? "n/a"
+        return String(runtime) + "seconds"
     }
     
-    var cast: [MovieCast]? {
+    /// Casts of the movie
+    public var cast: [MovieCast]? {
         credits?.cast
     }
     
@@ -94,10 +117,12 @@ public struct Movie: Decodable, Identifiable, Hashable {
         credits?.crew
     }
     
+    /// Director(s) of the movie
     var directors: [MovieCrew]? {
         crew?.filter { $0.job.lowercased() == "director" }
     }
     
+    /// Producer(s) of the movie
     var producers: [MovieCrew]? {
         crew?.filter { $0.job.lowercased() == "producer" }
     }
@@ -106,6 +131,7 @@ public struct Movie: Decodable, Identifiable, Hashable {
         crew?.filter { $0.job.lowercased() == "story" }
     }
     
+    /// YouTube trailers of the movie
     var youtubeTrailers: [MovieVideo]? {
         videos?.results.filter { $0.youtubeURL != nil }
     }
@@ -113,7 +139,6 @@ public struct Movie: Decodable, Identifiable, Hashable {
 }
 
 public extension Movie {
-    
     static func == (lhs: Movie, rhs: Movie) -> Bool {
         lhs.id == rhs.id
     }
@@ -123,27 +148,30 @@ public extension Movie {
     }
 }
 
-struct MovieGenre: Decodable {
+/// Genre of the movie
+public struct MovieGenre: Decodable {
     
-    let name: String
+    public let name: String
 }
 
 struct MovieCredit: Decodable {
     
-    let cast: [MovieCast]
-    let crew: [MovieCrew]
+    public let cast: [MovieCast]
+    public let crew: [MovieCrew]
 }
 
-struct MovieCast: Decodable, Identifiable {
-    let id: Int
-    let character: String
-    let name: String
+/// Cast of the movie containing character name and actor real name
+public struct MovieCast: Decodable, Identifiable {
+    public let id: Int
+    public let character: String
+    public let name: String
 }
 
-struct MovieCrew: Decodable, Identifiable {
-    let id: Int
-    let job: String
-    let name: String
+/// Crew of the movie containing real name and job description
+public struct MovieCrew: Decodable, Identifiable {
+    public let id: Int
+    public let job: String
+    public let name: String
 }
 
 struct MovieVideoResponse: Decodable {
@@ -151,17 +179,19 @@ struct MovieVideoResponse: Decodable {
     let results: [MovieVideo]
 }
 
-struct MovieVideo: Decodable, Identifiable {
+/// Video Trailer of a movie containing the name and YouTube URL
+public struct MovieVideo: Decodable, Identifiable {
     
-    let id: String
-    let key: String
-    let name: String
-    let site: String
+    public let id: String
+    public let key: String
+    public let name: String
+    public let site: String
     
-    var youtubeURL: URL? {
+    public var youtubeURL: URL? {
         guard site == "YouTube" else {
             return nil
         }
         return URL(string: "https://youtube.com/watch?v=\(key)")
     }
 }
+

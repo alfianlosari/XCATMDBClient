@@ -8,14 +8,14 @@
 
 import SwiftUI
 
-struct MovieBackdropView: View {
-    let movie: Movie
+public struct MovieBackdropView: View {
+    public let movie: Movie
     
-    init(movie: Movie) {
+    public init(movie: Movie) {
         self.movie = movie
     }
 
-    var body: some View {
+    public var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             imageView
             Text(movie.title)

@@ -7,15 +7,15 @@
 
 import SwiftUI
 
-struct MoviePosterView: View {
+public struct MoviePosterView: View {
     
-    let movie: Movie
+    public let movie: Movie
     
-    init(movie: Movie) {
+    public init(movie: Movie) {
         self.movie = movie
     }
     
-    var body: some View {
+    public var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             imageView
             Text(movie.title)
