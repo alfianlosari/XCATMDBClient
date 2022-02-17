@@ -1,0 +1,17 @@
+// Generate docarhive file using xcodebuild to custom derived data path
+
+xcodebuild docbuild \
+-scheme YOUR_TARGET_NAME \
+-derivedDataPath PATH_TO_SAVE_DERIVED_DATA_FOLDER \
+-destination 'platform=iOS Simulator,name=iPhone 13' 
+
+// Find docarchive file in the build derived data path
+find PATH_TO_SAVE_DERIVED_DATA_FOLDER -type d -name '*.doccarchive'
+
+// Xcode > 13.3 Docc Static Hosting generate
+$(xcrun --find docc) process-archive \
+transform-for-static-hosting PATH_TO_DOARCHIVE_FILE \
+--output-path PATH_TO_SAVE_FILES \
+--hosting-base-path URL_BASE_PATH
+
+(e.g https://alfianlosari.github.io/URL_BASE_PATH/)
